@@ -3,13 +3,14 @@ package com.jt.bookingschedule.controller;
 import com.jt.bookingschedule.model.Client;
 import com.jt.bookingschedule.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/client")
+@RequestMapping(path = "api/client")
 public class ClientController {
 
     private ClientRepository repository;
@@ -24,7 +25,7 @@ public class ClientController {
         return repository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}")
     public Optional<Client> findClientById(@PathVariable Long id) {
         return repository.findById(id);
     }
@@ -35,7 +36,7 @@ public class ClientController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}")
     public void updateClientData(@RequestBody Client newClient,
                                  @PathVariable Long id) {
 
@@ -57,7 +58,8 @@ public class ClientController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path ="/{id}")
+
     public void deleteClient(@PathVariable Long id) {
         repository.deleteById(id);
     }
