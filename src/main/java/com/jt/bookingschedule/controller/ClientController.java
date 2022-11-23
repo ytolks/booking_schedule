@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/client")
+@RequestMapping(path = "management/api/client")
 public class ClientController {
 
     private ClientRepository repository;
@@ -59,7 +59,6 @@ public class ClientController {
     }
 
     @DeleteMapping(path ="/{id}")
-
     public void deleteClient(@PathVariable Long id) {
         repository.deleteById(id);
     }

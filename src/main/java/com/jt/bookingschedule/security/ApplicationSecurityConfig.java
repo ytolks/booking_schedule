@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.jt.bookingschedule.security.ApplicationUserRole.*;
+import static com.jt.bookingschedule.security.ApplicationUserRole.ADMIN;
+
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig {
@@ -33,12 +36,15 @@ public class ApplicationSecurityConfig {
                                 authorizationManagerRequestMatcherRegistry
                                         .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                                         .antMatchers(HttpMethod.POST,"/management/api/**")
-                                            .hasAuthority(ApplicationUserPermission.CLIENT_WRITE.name())
+                                            .hasAuthority(ApplicationUserPermission.CLIENT_WRITE.getPermission())
                                         .antMatchers(HttpMethod.PUT,"/management/api/**")
-                                            .hasAuthority(ApplicationUserPermission.CLIENT_WRITE.name())
+                                            .hasAuthority(ApplicationUserPermission.CLIENT_WRITE.getPermission())
                                         .antMatchers(HttpMethod.DELETE,"/management/api/**")
-                                            .hasAuthority(ApplicationUserPermission.CLIENT_WRITE.name())
-                                        . antMatchers("/management/api/**").hasAnyRole(ApplicationUserRole.ADMIN.name())
+                                            .hasAuthority(ApplicationUserPermission.CLIENT_WRITE.getPermission())
+                                        .antMatchers(HttpMethod.GET,"/management/api/**")
+
+                                        . hasAnyRole(ADMIN.name(),CLIENT.name())
+
 
                                         .anyRequest()
                                         .authenticated())
@@ -52,11 +58,20 @@ public class ApplicationSecurityConfig {
                 User.builder()
                         .username("alina")
                         .password(passwordEncoder.encode("12345"))
-                        .roles(ApplicationUserRole.ADMIN.name()) //ROLE_ADMIN
+                        //.roles(ApplicationUserRole.ADMIN.name()) //ROLE_ADMIN
+                        .authorities(ADMIN.getGrantedAuthorities())
+                        .build();
+        UserDetails lizaTolkaClient =
+                User.builder()
+                        .username("liza")
+                        .password(passwordEncoder.encode("12345"))
+                       // .roles(CLIENT.name()) //ROLE_ADMIN
+                        .authorities(CLIENT.getGrantedAuthorities())
                         .build();
 
         return new InMemoryUserDetailsManager(
-                alinaTolkaAdmin
+                alinaTolkaAdmin,
+                lizaTolkaClient
         );
     }
 }
