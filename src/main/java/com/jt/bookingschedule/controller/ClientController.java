@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/client")
+@RequestMapping(path = "management/api/client")
 public class ClientController {
 
     private ClientRepository repository;
@@ -21,22 +21,26 @@ public class ClientController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public List<Client> getClients() {
         return repository.findAll();
     }
 
     @GetMapping(path = "/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     public Optional<Client> findClientById(@PathVariable Long id) {
         return repository.findById(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('client:write')")
     public void saveClient(@RequestBody Client client) {
         repository.save(client);
     }
 
 
     @PutMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('client:write')")
     public void updateClientData(@RequestBody Client newClient,
                                  @PathVariable Long id) {
 
@@ -59,7 +63,7 @@ public class ClientController {
     }
 
     @DeleteMapping(path ="/{id}")
-
+    @PreAuthorize("hasAuthority('client:write')")
     public void deleteClient(@PathVariable Long id) {
         repository.deleteById(id);
     }
